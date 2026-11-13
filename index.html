@@ -112,27 +112,6 @@
     .decider-label{font-size:11px;font-weight:850;margin:0}
     @media(max-width:650px){.candidate-grid{grid-template-columns:1fr}}
 
-    /* Aligned two-court timeline: a single shared time axis */
-    .schedule{display:block}
-    .timeline-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
-    .timeline{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;min-width:360px}
-    .timeline col.time-col{width:114px}
-    .timeline th{font-size:13px;font-weight:850;text-align:left;background:#ebf2e9;padding:15px 15px;border-bottom:1px solid var(--line)}
-    .timeline th:first-child{background:#e0ebdf;font-size:11px;letter-spacing:.04em;color:var(--muted)}
-    .timeline th small{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:3px}
-    .timeline td{padding:11px 15px;vertical-align:middle;border-bottom:1px solid var(--line);border-right:1px solid var(--line)}
-    .timeline td:last-child,.timeline th:last-child{border-right:0}
-    .timeline tr:last-child td{border-bottom:0}
-    .timeline .period{background:#f5f7f0;font-weight:850;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
-    .timeline .event strong{display:block;font-size:13px;line-height:1.35}
-    .timeline .event small{display:block;color:var(--muted);font-size:11px;line-height:1.4;margin-top:3px}
-    .timeline .event.play{background:#f3faef}
-    .timeline .event.final{background:#fff4d9}
-    .timeline .event.bonus{background:#edf4ff}
-    .timeline .event.break{background:#f4f5ed}
-    .timeline .event.closed{background:#f4f5f2;color:#89938b}
-    .timeline .event.switch{background:#fff7ed;color:#905d2c}
-    @media(max-width:650px){.timeline col.time-col{width:90px}.timeline th,.timeline td{padding:10px 8px}.timeline .period{font-size:11px}.timeline .event strong{font-size:12px}.timeline .event small{font-size:10px}}
   </style>
 </head>
 <body>
@@ -171,7 +150,7 @@
     <section class="section" aria-labelledby="planning-heading">
       <div class="section-header"><div><p class="kicker">10 minuten inspelen · 25–30 minuten per wedstrijd</p><h2 id="planning-heading">Het baanschema</h2></div><span class="muted" style="font-size:12px">Halve finales · finale · bonus</span></div>
       <div class="schedule" id="schedule"></div>
-      <p class="caption">De tijden staan per baan naast elkaar op één tijdlijn. Op baan 2 is er 5 minuten wisseltijd tussen iedere wedstrijd (15:55–16:00 en 16:30–16:35). Daardoor duren halve finale 2 en de bonuswedstrijd 25 minuten. De finale en de wedstrijd om plek 3 blijven 30 minuten.</p>
+      <p class="caption">Iedere baan heeft een eigen overzicht. Op baan 2 is er 5 minuten wisseltijd (15:55–16:00 en 16:30–16:35). Halve finale 2 en de bonuswedstrijd duren 25 minuten; de finale en de wedstrijd om plek 3 duren 30 minuten.</p>
     </section>
 
     <section class="section" aria-labelledby="round-heading">
@@ -272,22 +251,22 @@
     }
     function drawSchedule(){
       const b=bracket(),bonus=bonusDetails(),pairName=p=>p.map(i=>i===null?'Nog onbekend':teams[i]).join(' vs ');
-      const cell=(title,desc,kind='',rows=1)=>`<td class="event ${kind}"${rows>1?` rowspan="${rows}"`:''}><strong>${esc(title)}</strong>${desc?`<small>${esc(desc)}</small>`:''}</td>`;
-      const period=time=>`<td class="period">${time}</td>`;
-      const html=`<div class="timeline-wrap"><table class="timeline" aria-label="Gelijklopend baanschema met tijden, baan 1 en baan 2">
-        <colgroup><col class="time-col"><col><col></colgroup>
-        <thead><tr><th scope="col">Tijd</th><th scope="col">Baan 1<small>15:00–16:30</small></th><th scope="col">Baan 2<small>15:30–17:00</small></th></tr></thead>
-        <tbody>
-          <tr>${period('15:00–15:10')}${cell('Inspelen','10 minuten','break')}${cell('Nog niet beschikbaar','Open vanaf 15:30','closed',2)}</tr>
-          <tr>${period('15:10–15:30')}${cell('Halve finale 1',pairName(b.semi1),'play',2)}</tr>
-          <tr>${period('15:30–15:40')}${cell('Halve finale 2',pairName(b.semi2),'play',2)}</tr>
-          <tr>${period('15:40–15:55')}${cell('Rust / vrij spelen','Klaarmaken voor de finale','break',2)}</tr>
-          <tr>${period('15:55–16:00')}${cell('Wisseltijd','5 minuten','switch')}</tr>
-          <tr>${period('16:00–16:30')}${cell('🏆 Finale',pairName(b.final),'final')}${cell('Wedstrijd om plek 3',pairName(b.third),'play')}</tr>
-          <tr>${period('16:30–16:35')}${cell('Baan gesloten','Reservering afgelopen','closed',2)}${cell('Wisseltijd','5 minuten','switch')}</tr>
-          <tr>${period('16:35–17:00')}${cell('Bonuswedstrijd',bonus.selected?pairName(bonus.selected.pair):'Automatisch gekozen na officiële uitslagen','bonus')}</tr>
-        </tbody></table></div>`;
-      $('schedule').innerHTML=html;
+      const layout=[
+        {title:'Baan 1',range:'15:00 – 16:30',slots:[
+          ['15:00–15:10','Inspelen','Voor de teams die er al zijn','warmup'],
+          ['15:10–15:40','Halve finale 1',pairName(b.semi1),''],
+          ['15:40–16:00','Vrij spelen, rust & klaarmaken','Voor de finale','warmup'],
+          ['16:00–16:30','🏆 Grote finale',pairName(b.final),'final']
+        ]},
+        {title:'Baan 2',range:'15:30 – 17:00',slots:[
+          ['15:30–15:55','Halve finale 2',pairName(b.semi2),''],
+          ['15:55–16:00','Wisseltijd','5 minuten','warmup'],
+          ['16:00–16:30','Wedstrijd om plek 3',pairName(b.third),''],
+          ['16:30–16:35','Wisseltijd','5 minuten','warmup'],
+          ['16:35–17:00','Bonuswedstrijd',bonus.selected?pairName(bonus.selected.pair):'Wordt automatisch gekozen','bonus']
+        ]}
+      ];
+      $('schedule').innerHTML=layout.map(l=>`<div class="court"><div class="court-head"><strong>${l.title}</strong><small>${l.range}</small></div>${l.slots.map(s=>`<div class="slot ${s[3]==='warmup'?'available':''}"><span class="time">${s[0]}</span><span><span class="slot-name">${esc(s[1])}</span><span class="slot-sub">${esc(s[2])}</span></span>${s[3]==='final'?'<span class="pill orange">🏆</span>':s[3]==='bonus'?'<span class="pill blue">EXTRA</span>':''}</div>`).join('')}</div>`).join('');
     }
     function matchHtml(key,title,time,court,pair,isFinal=false){
       const status=scoreStatus(key),names=pair.map(i=>i===null?null:teams[i]);
