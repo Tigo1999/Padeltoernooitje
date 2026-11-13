@@ -253,9 +253,10 @@
       const b=bracket(),bonus=bonusDetails(),pairName=p=>p.map(i=>i===null?'Nog onbekend':teams[i]).join(' vs ');
       const layout=[
         {title:'Baan 1',range:'15:00 – 16:30',slots:[
-          ['15:00–15:10','Inspelen','Voor de teams die er al zijn','warmup'],
-          ['15:10–15:40','Halve finale 1',pairName(b.semi1),''],
-          ['15:40–16:00','Vrij spelen, rust & klaarmaken','Voor de finale','warmup'],
+          ['15:00–15:15','Inspelen','Voor de teams die er al zijn','warmup'],
+          ['15:15–15:45','Halve finale 1',pairName(b.semi1),''],
+          ['15:45–15:55','10 min inspelen voor de finale','warm-up'],
+          ['15:55-16:00','5 min wisseltijd'],
           ['16:00–16:30','🏆 Grote finale',pairName(b.final),'final']
         ]},
         {title:'Baan 2',range:'15:30 – 17:00',slots:[
