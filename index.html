@@ -140,9 +140,9 @@
       <div class="settings">
         <div><label for="openingPair">Kies de eerste halve finale op baan 1 (15:10)</label><p>Na 10 minuten inspelen begint de eerste halve finale. De tweede halve finale start om 15:30 op baan 2, zodat Sem &amp; Lotte pas dan hoeven aan te sluiten. Bij wijziging worden de uitslagen gewist.</p></div>
         <select id="openingPair" aria-label="Eerste halve finale">
-          <option value="0-2">Tess &amp; Tigo tegen Mattijs &amp; Amber</option>
+          <option value="0-2">Tess &amp; Tigo tegen Matthijs &amp; Amber</option>
           <option value="0-3">Tess &amp; Tigo tegen Gijs &amp; Vianne</option>
-          <option value="2-3">Mattijs &amp; Amber tegen Gijs &amp; Vianne</option>
+          <option value="2-3">Matthijs &amp; Amber tegen Gijs &amp; Vianne</option>
         </select>
       </div>
     </section>
@@ -191,7 +191,7 @@
   <script>
   (()=>{
     'use strict';
-    const teams=['Tess & Tigo','Sem & Lotte','Mattijs & Amber','Gijs & Vianne'];
+    const teams=['Tess & Tigo','Sem & Lotte','Matthijs & Amber','Gijs & Vianne'];
     const keys=['semi1','semi2','final','third','bonus'];
     const STORAGE='padel-open-knockout-v6';
     const defaultData=()=>({pair:'0-2',scores:Object.fromEntries(keys.map(k=>[k,['','']])),deciders:Object.fromEntries(keys.map(k=>[k,null])),tieChoice:null});
@@ -255,8 +255,8 @@
         {title:'Baan 1',range:'15:00 – 16:30',slots:[
           ['15:00–15:15','Inspelen','Voor de teams die er al zijn','warmup'],
           ['15:15–15:45','Halve finale 1',pairName(b.semi1),''],
-          ['15:45–15:55','10 min inspelen voor de finale','warm-up'],
-          ['15:55-16:00','5 min wisseltijd'],
+          ['15:45–15:55','10 min inspelen voor de finale','warmup'],
+          ['15:55-16:00','Wisseltijd','5 minuten','warmup'],
           ['16:00–16:30','🏆 Grote finale',pairName(b.final),'final']
         ]},
         {title:'Baan 2',range:'15:30 – 17:00',slots:[
